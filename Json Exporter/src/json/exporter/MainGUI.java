@@ -6,10 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -48,6 +55,7 @@ public class MainGUI {
         btnClear=new JButton("Reset");
         exportJson=new JButton("Export JSON");
         exportJson.setBounds(250, 590, 110, 30);
+        exportJson.addActionListener( new ActionExporter());
         btnAdd.setBounds(30, 150, 70, 30);
          btnClear.setBounds(110, 150, 70, 30);
         fieldPanel.add(btnAdd);
@@ -153,11 +161,7 @@ public class MainGUI {
             } catch (Exception e) {
                 // If Nimbus is not available, you can set the GUI to another look and feel.
             }
-
-
-                      new MainGUI().displayGUI();
-        
-        
+                      new MainGUI().displayGUI();               
     }
     
     public void displayGUI(){
@@ -189,17 +193,15 @@ public class MainGUI {
                  fieldData=fieldData+",\n \"minlength\"";
              }
                if(maxLength.isSelected()){
-                 fieldData=fieldData+",\n \"maxlength\"'\n]";
+                 fieldData=fieldData+",\n \"maxlength\"\n]";
              }
                 if(minLength.isSelected()){
-                  fieldData=fieldData+",\n\"fieldValidateRulesMinlength\": \""+txtMinLength.getText()+"\"";
+                  fieldData=fieldData+",\n\"fieldValidateRulesMinlength\":\""+txtMinLength.getText()+"\"";
              }
                if(maxLength.isSelected()){
-                 fieldData=fieldData+",\n\"fieldValidateRulesMaxlength\": \""+txtMaxLength.getText()+"\"";
+                 fieldData=fieldData+"\n\"fieldValidateRulesMaxlength\":\""+txtMaxLength.getText()+"\"";
+             }             
              }
-             
-             }
-
 
           fieldData=fieldData+"\n}";
           fieldList.add(fieldData);
@@ -207,6 +209,7 @@ public class MainGUI {
               fieldData=",\n"+fieldData;          
           jsonEditor.append(fieldData);          
           fieldData="";
+          field.clear();
           String jsonData=jsonEditor.getText();
            txtId.setText(Integer.toString(Integer.parseInt(txtId.getText())+1));
            txtFieldName.setText("");
@@ -233,6 +236,44 @@ public class MainGUI {
             
         }
    }
+    class ActionExporter implements ActionListener{           
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            chooser=new JFileChooser();
+            chooser.setDialogTitle("Save Json File");
+    
+            int choose=chooser.showSaveDialog(null);
+            if(choose==JFileChooser.APPROVE_OPTION){
+                
+                String filename=chooser.getSelectedFile().getName();
+                String directory=chooser.getCurrentDirectory().toString();
+                createFile=new File(directory+"/"+filename+".json");
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(createFile);
+                     byte[] jsonBytes=(" {\n" +
+"\"relationships\": [],\n" +
+"\"fields\": ["+
+                             jsonEditor.getText()
+                             +"\n],\n" +
+"    \"changelogDate\":\"20150807153017\",\n" +
+"    \"dto\": \"no\",\n" +
+"    \"pagination\":\"pagination\"\n" +
+"}"
+                             ).getBytes();
+                        fos.write(jsonBytes);
+                        fos.flush();
+                    jsonEditor.setText("");
+                    txtId.setText("1");
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }                   
+                              
+            }
+         }      
+    }
     
     JFrame frame=new JFrame();
     private JMenuBar menuBar;
@@ -253,5 +294,9 @@ public class MainGUI {
     ArrayList fieldList=new ArrayList<>();
     int incrementField=1;
     int incrementRelationId=1;
-    final String[] dataType={"String","LocalDate","Integer","BIGINT","Double","byte[]"};
+    final String[] dataType={"String","LocalDate","Integer","BigDecimal","Double","byte[]"};
+    private JFileChooser chooser;
+    private File createFile;
+    
+
 }
