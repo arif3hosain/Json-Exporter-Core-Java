@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,8 +32,9 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
- 
+    //class MainGUI
 public class MainGUI {
+            //default constructor MainGUI
     public MainGUI() {                   
         fieldPanel=new JPanel();             
         jsonEditor=new JTextArea("");
@@ -69,17 +70,12 @@ public class MainGUI {
         txtId=new JTextField(10);
         txtId.setText(Integer.toString(incrementField));
         txtFieldName=new JTextField(10);
-        txtFieldName.addKeyListener(new KeyListener() {
+        txtFieldName.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyTyped(KeyEvent e) {
                  btnAdd.setEnabled(true);
             }
-            /*);*/
-            @Override
-            public void keyPressed(KeyEvent e) {
-             }
-
             @Override
             public void keyReleased(KeyEvent e) {
                 if(!(txtFieldName.getText().length() >0)){
@@ -88,8 +84,8 @@ public class MainGUI {
              }
         });
         typeCombo=new JComboBox(dataType);
-        typeCombo.addItemListener(new ItemListener() {
-
+                                        //item listener will work when user change selection of item.
+        typeCombo.addItemListener(new ItemListener() {           
             @Override
             public void itemStateChanged(ItemEvent e) {
                 Object selectedItem=typeCombo.getSelectedItem();
@@ -107,8 +103,7 @@ public class MainGUI {
                 else if(selectedItem.equals("byte[]")){
                   setFalse();
                 }
-                    //  final String[] dataType={"String","LocalDate","Integer","BigDecimal","Double","byte[]"};
-             }
+              }
         });
         txtMinLength=new JTextField(10);
         txtMaxLength=new JTextField(5);
@@ -119,21 +114,15 @@ public class MainGUI {
         txtMaxLength.setBounds(280, 120, 40, 25);
         txtMaxLength.setText("45");
        
-        fieldPanel.add(txtMaxLength);
-        
+        fieldPanel.add(txtMaxLength);        
         lblId.setBounds(20, 20, 100, 20);
-        fieldPanel.add(lblId);
-        
+        fieldPanel.add(lblId);      
         lblTitle.setBounds(20, 50, 100, 20);
-        fieldPanel.add(lblTitle);
-        
+        fieldPanel.add(lblTitle);        
         lblFieldType.setBounds(20, 80, 100, 20);
-        fieldPanel.add(lblFieldType);
-       
-        
+        fieldPanel.add(lblFieldType);              
         txtId.setBounds(130, 20, 100, 30);
-        fieldPanel.add(txtId);
-        
+        fieldPanel.add(txtId);      
         txtFieldName.setBounds(130, 50, 250, 30);
         fieldPanel.add(txtFieldName);
         
@@ -169,8 +158,7 @@ public class MainGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                     changeLogId=JOptionPane.showInputDialog("Changelog ID", "");
-                    JOptionPane.showMessageDialog(null, changeLogId);
-            }
+             }
         });
     }
   
@@ -196,9 +184,7 @@ public class MainGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setResizable(false);
-       
-      
+        frame.setResizable(false);           
     }
     class AddAction implements ActionListener{
 
@@ -240,9 +226,7 @@ public class MainGUI {
            txtId.setText(Integer.toString(Integer.parseInt(txtId.getText())+1));
            txtFieldName.setText("");
            btnAdd.setEnabled(false);
-           txtFieldName.requestFocus(true);
-        
-        
+           txtFieldName.requestFocus(true);              
       }
     }
     class ClearAction implements ActionListener{
@@ -256,11 +240,7 @@ public class MainGUI {
             txtMinLength.setText("");
             txtMaxLength.setText("");
             
-        }
-        
-        public void exportToJson(){
-            
-        }
+        }          
    }
     class ActionExporter implements ActionListener{           
         @Override
