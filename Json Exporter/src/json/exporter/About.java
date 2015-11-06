@@ -21,11 +21,6 @@ private JPanel panel;
 private JLabel developed,description,lblFacebook,lblGoogleplus,lblGithub,lblLinkedin;
 private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
 
-//        final URI facebook=new URI("");
-//        final URI githubh=new URI("");
-//        final URI linkedin=new URI("");
-//        final URI googleplus=new URI("");
-// 
     public About() {
         panel=new JPanel();
         developed=new JLabel("Developer   :Arif Hosain");
@@ -45,13 +40,13 @@ private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
         lblLinkedin.setBounds(40, 150, 100, 25);
         
         linkFacebook=new JLabel("Click here");
-        linkFacebook.setBounds(140, 60, 100, 25);
+        linkFacebook.setBounds(140, 60, 70, 25);
         linkGoogle=new JLabel("Click here");
-        linkGoogle.setBounds(140, 90, 100, 25);
+        linkGoogle.setBounds(140, 90, 70, 25);
         linkGithub=new JLabel("Click here");
-        linkGithub.setBounds(140, 120, 100, 25);
+        linkGithub.setBounds(140, 120, 70, 25);
         linkLinkedin=new JLabel("Click here");
-        linkLinkedin.setBounds(140, 150, 100, 25);
+        linkLinkedin.setBounds(140, 150, 70, 25);
         
         linkFacebook.setCursor(new Cursor(Cursor.HAND_CURSOR));
         linkFacebook.setForeground(Color.blue);
@@ -127,11 +122,8 @@ private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-    }
-    public static void main(String[] args) {
         new About();
-    }
+    }  
     public void open(URI uri){
          if(Desktop.isDesktopSupported()){
             try {

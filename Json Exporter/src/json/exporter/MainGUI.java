@@ -46,7 +46,7 @@ public class MainGUI {
         btnAdd=new JButton("Add");
         btnAdd.setEnabled(false);
         btnClear=new JButton("Reset");
-        exportJson=new JButton("Export JSON");
+        exportJson=new JButton("Export Entity");
         exportJson.setBounds(250, 590, 110, 30);
         exportJson.addActionListener( new ActionExporter());
         btnAdd.setBounds(30, 150, 70, 30);
@@ -184,7 +184,8 @@ public class MainGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setResizable(false);           
+        frame.setResizable(false);
+        frame.setTitle("JSON Exporter");
     }
     class AddAction implements ActionListener{
 
