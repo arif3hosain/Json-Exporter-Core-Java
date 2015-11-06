@@ -162,7 +162,7 @@ public class MainGUI {
         file=new JMenu("File");
         help=new JMenu("Help");
         about=new JMenuItem("About");
-       
+        about.addActionListener(new About());
         
         help.add(about);
         file.add(openSQL=new JMenuItem("Open SQL File"));
