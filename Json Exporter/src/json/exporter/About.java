@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class About extends JFrame implements ActionListener{
+public class About extends JFrame{
 private JPanel panel;
 private JLabel developed,description,lblFacebook,lblGoogleplus,lblGithub,lblLinkedin;
 private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
@@ -115,15 +115,11 @@ private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
         panel.add(description);
         setContentPane(panel);
         setSize(300, 300);
+        setResizable(false);
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        new About();
-    }  
+     
     public void open(URI uri){
          if(Desktop.isDesktopSupported()){
             try {

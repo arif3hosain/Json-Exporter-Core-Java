@@ -22,7 +22,7 @@ public class Relationship extends JFrame{
  private JTextField txtId,txtRelationshipName,txtOtherEntityName,txtOtherEntityField,txtOwnerSide;
  private JButton btnAdd,btnDone;
  private int relationalFieldId=1;
- private ArrayList relationList=new ArrayList();
+  ArrayList relationList=new ArrayList();
  private ArrayList attributeList;
  
     public Relationship() {
@@ -62,6 +62,7 @@ public class Relationship extends JFrame{
        btnAdd.addActionListener(new ActionAdd());
        btnDone=new JButton("Done");
        btnDone.setBounds(170, 210, 80, 25);
+       btnDone.addActionListener(new ActionDone());
        panel.add(id);
        panel.add(txtId);
        panel.add(relationshipName);
@@ -78,19 +79,32 @@ public class Relationship extends JFrame{
        panel.add(btnAdd);
        panel.add(btnDone);
        txtId.setFocusable(false);
+         txtRelationshipName.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                 btnAdd.setEnabled(true);
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(!(txtRelationshipName.getText().length() >0)){
+                    btnAdd.setEnabled(false);
+                }               
+             }
+        });
         txtRelationshipName.setFocusable(true);
         setContentPane(panel);
+        btnDone.setEnabled(false);
         setSize(350, 350);
         setLocationRelativeTo(null);
         setTitle("Set Relationship");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
         setVisible(true);
+        
     }
     
-  
-    public static void main(String[] args) {
-        new Relationship();
-    }
+ 
     class ActionRelationshipName extends KeyAdapter{
         @Override
         public void keyReleased(KeyEvent e) {
@@ -102,14 +116,17 @@ public class Relationship extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             attributeList=new ArrayList();
-            attributeList.add(txtId.getText());
-            attributeList.add(txtRelationshipName.getText());
-            attributeList.add(txtOtherEntityName.getText());
-            attributeList.add(relations.getSelectedItem());
-            attributeList.add(txtOtherEntityField.getText());
-            attributeList.add(ownerSide.getText());
+            attributeList.add("\"relationshipId\":"+txtId.getText()+",");
+            attributeList.add("\"relationshipName\":\""+txtRelationshipName.getText()+"\",");
+            attributeList.add("\"otherEntityName\":\""+txtOtherEntityName.getText()+"\",");
+            attributeList.add("\"relationshipType\":\""+relations.getSelectedItem()+"\",");
+            attributeList.add("\"otherEntityField\":\""+txtOtherEntityField.getText()+"\"");
+            if(!(txtOwnerSide.getText().equals("") || (txtOwnerSide.getText().equals(null)))){
+                attributeList.add(",\n\"ownerSide\":\""+txtOwnerSide.getText()+"\"");
+                
+            }
             relationList.add(attributeList);     
-            
+             
             relationalFieldId++;          
             txtId.setText(Integer.toString(relationalFieldId));
             txtRelationshipName.setText("");
@@ -117,9 +134,22 @@ public class Relationship extends JFrame{
             txtRelationshipName.requestFocus(true);
             txtOtherEntityName.setText("");
             txtOwnerSide.setText("");
-            txtOtherEntityField.setText("");
-            
+            txtOtherEntityField.setText("");  
+            btnAdd.setEnabled(false);
+             if(relationList.size() >0){
+                btnDone.setEnabled(true);
+            }
         }
         
     }
+    class ActionDone implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            btnDone.setEnabled(false); 
+            System.exit(1);                    
+
+        }
+        
+    }
+    
 }

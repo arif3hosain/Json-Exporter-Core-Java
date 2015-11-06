@@ -44,15 +44,19 @@ public class MainGUI {
         lblTitle=new JLabel("Field Title");
         lblFieldType=new JLabel("Field Type");             
         btnAdd=new JButton("Add");
+        btnRelation=new JButton("Relation");
         btnAdd.setEnabled(false);
         btnClear=new JButton("Reset");
         exportJson=new JButton("Export Entity");
         exportJson.setBounds(250, 590, 110, 30);
         exportJson.addActionListener( new ActionExporter());
         btnAdd.setBounds(30, 150, 70, 30);
-         btnClear.setBounds(110, 150, 70, 30);
+        btnClear.setBounds(110, 150, 70, 30);
+        btnRelation.setBounds(180, 150, 80, 30);
         fieldPanel.add(btnAdd);
         fieldPanel.add(btnClear);
+        fieldPanel.add(btnRelation);
+        btnRelation.addActionListener(new ActionRelation());
         required=new JCheckBox("Required");
         minLength=new JCheckBox("Min");
         maxLength=new JCheckBox("Max");
@@ -140,7 +144,7 @@ public class MainGUI {
         file=new JMenu("File");
         help=new JMenu("Help");
         about=new JMenuItem("About");
-        about.addActionListener(new About());
+        about.addActionListener(new ActionAbout());
         
         help.add(about);
         file.add(openSQL=new JMenuItem("Open SQL File"));
@@ -153,8 +157,8 @@ public class MainGUI {
       
         btnAdd.addActionListener(new AddAction());
         btnClear.addActionListener(new ClearAction());
+       
         changeLog.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                     changeLogId=JOptionPane.showInputDialog("Changelog ID", "");
@@ -281,6 +285,20 @@ public class MainGUI {
             }
          }      
     }
+    class ActionRelation implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+             new Relationship();
+        }
+        
+    }
+      class ActionAbout implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new About();
+        }
+        
+    }
     public void setFalse(){
         minLength.setEnabled(false);
         maxLength.setEnabled(false);
@@ -299,7 +317,7 @@ public class MainGUI {
     private JMenu file;
     private JMenu help;
     private JMenuItem about,openSQL,saveTo,changeLog;
-    private JButton btnAdd,btnClear,exportJson;    
+    private JButton btnAdd,btnClear,exportJson,btnRelation;    
     private JLabel lblId,lblTitle,lblFieldType;
     private JTextField txtId,txtFieldName,txtMinLength,txtMaxLength;
     private JCheckBox required,minLength,maxLength;   
