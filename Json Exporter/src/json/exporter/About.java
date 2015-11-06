@@ -6,16 +6,11 @@ import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,7 +18,7 @@ import javax.swing.JPanel;
 
 public class About extends JFrame implements ActionListener{
 private JPanel panel;
-private JLabel developed,lblFacebook,lblGoogleplus,lblGithub,lblLinkedin;
+private JLabel developed,description,lblFacebook,lblGoogleplus,lblGithub,lblLinkedin;
 private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
 
 //        final URI facebook=new URI("");
@@ -33,26 +28,30 @@ private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
 // 
     public About() {
         panel=new JPanel();
-        developed=new JLabel("Developer: Arif Hosain");
+        developed=new JLabel("Developer   :Arif Hosain");
         developed.setFont(new Font("Cambria", Font.BOLD, 14));
         developed.setBounds(40,5,250,30);
+        description=new JLabel("Develop For : SETP");
+        description.setFont(new Font("Cambria", Font.BOLD, 13));
+        description.setBounds(40,30,300,30);
+               
         lblFacebook=new JLabel("Facebook");
-        lblFacebook.setBounds(30, 40, 80, 25);
+        lblFacebook.setBounds(40, 60, 80, 25);
         lblGoogleplus=new JLabel("Google Plus");
-        lblGoogleplus.setBounds(30, 70, 100, 25);
+        lblGoogleplus.setBounds(40, 90, 100, 25);
         lblGithub=new JLabel("Github");
-        lblGithub.setBounds(30, 100, 100, 25);
+        lblGithub.setBounds(40, 120, 100, 25);
         lblLinkedin=new JLabel("LinkedIn");
-        lblLinkedin.setBounds(30, 130, 100, 25);
+        lblLinkedin.setBounds(40, 150, 100, 25);
         
         linkFacebook=new JLabel("Click here");
-        linkFacebook.setBounds(140, 40, 100, 25);
+        linkFacebook.setBounds(140, 60, 100, 25);
         linkGoogle=new JLabel("Click here");
-        linkGoogle.setBounds(140, 70, 100, 25);
+        linkGoogle.setBounds(140, 90, 100, 25);
         linkGithub=new JLabel("Click here");
-        linkGithub.setBounds(140, 100, 100, 25);
+        linkGithub.setBounds(140, 120, 100, 25);
         linkLinkedin=new JLabel("Click here");
-        linkLinkedin.setBounds(140, 130, 100, 25);
+        linkLinkedin.setBounds(140, 150, 100, 25);
         
         linkFacebook.setCursor(new Cursor(Cursor.HAND_CURSOR));
         linkFacebook.setForeground(Color.blue);
@@ -118,6 +117,7 @@ private JLabel linkFacebook,linkGoogle,linkGithub,linkLinkedin;
         panel.add(linkGoogle);
         panel.add(linkFacebook);
         panel.setLayout(null);
+        panel.add(description);
         setContentPane(panel);
         setSize(300, 300);
         setVisible(true);
