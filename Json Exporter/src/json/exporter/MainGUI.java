@@ -34,25 +34,14 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
  
 public class MainGUI {
-
-   
-
-    public MainGUI() {
-       
-        
-        
-        fieldPanel=new JPanel();     
-        
+    public MainGUI() {                   
+        fieldPanel=new JPanel();             
         jsonEditor=new JTextArea("");
         pane=new JScrollPane(jsonEditor);
-        pane.setBounds(0, 200, 450, 380);
-        
-       
+        pane.setBounds(0, 200, 450, 380);               
         lblId=new JLabel("Field ID");
         lblTitle=new JLabel("Field Title");
-        lblFieldType=new JLabel("Field Type");
-       
-        
+        lblFieldType=new JLabel("Field Type");             
         btnAdd=new JButton("Add");
         btnAdd.setEnabled(false);
         btnClear=new JButton("Reset");
