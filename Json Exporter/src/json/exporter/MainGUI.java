@@ -4,6 +4,8 @@ package json.exporter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -22,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -96,6 +99,28 @@ public class MainGUI {
              }
         });
         typeCombo=new JComboBox(dataType);
+        typeCombo.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Object selectedItem=typeCombo.getSelectedItem();
+                if(selectedItem.equals("String")){
+                    setTrue();
+                }else if(selectedItem.equals("LocalDate")){
+                    setFalse();
+                }else if(selectedItem.equals("Integer")){
+                   setTrue();
+                }else if(selectedItem.equals("BigDecimal")){
+                    setFalse();
+                }else if(selectedItem.equals("Double")){
+                    setFalse();
+                }
+                else if(selectedItem.equals("byte[]")){
+                  setFalse();
+                }
+                    //  final String[] dataType={"String","LocalDate","Integer","BigDecimal","Double","byte[]"};
+             }
+        });
         txtMinLength=new JTextField(10);
         txtMaxLength=new JTextField(5);
         
@@ -137,16 +162,27 @@ public class MainGUI {
         file=new JMenu("File");
         help=new JMenu("Help");
         about=new JMenuItem("About");
+       
+        
         help.add(about);
         file.add(openSQL=new JMenuItem("Open SQL File"));
         file.add(saveTo=new JMenuItem("Export JSON"));
-       
+        changeLog=new JMenuItem("Change Log");
+        file.add(changeLog);
         menuBar.add(file);
         menuBar.add(help);
         frame.setJMenuBar(menuBar);
       
         btnAdd.addActionListener(new AddAction());
         btnClear.addActionListener(new ClearAction());
+        changeLog.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    changeLogId=JOptionPane.showInputDialog("Changelog ID", "");
+                    JOptionPane.showMessageDialog(null, changeLogId);
+            }
+        });
     }
   
     
@@ -171,6 +207,7 @@ public class MainGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setResizable(false);
        
       
     }
@@ -256,7 +293,7 @@ public class MainGUI {
 "\"fields\": ["+
                              jsonEditor.getText()
                              +"\n],\n" +
-"    \"changelogDate\":\"20150807153017\",\n" +
+"    \"changelogDate\":\""+changeLogId+"\",\n" +
 "    \"dto\": \"no\",\n" +
 "    \"pagination\":\"pagination\"\n" +
 "}"
@@ -274,14 +311,24 @@ public class MainGUI {
             }
          }      
     }
+    public void setFalse(){
+        minLength.setEnabled(false);
+        maxLength.setEnabled(false);
+        txtMinLength.setEnabled(false);
+        txtMaxLength.setEnabled(false);
+    }
+    public void setTrue(){
+        minLength.setEnabled(true);
+        maxLength.setEnabled(true);
+        txtMinLength.setEnabled(true);
+        txtMaxLength.setEnabled(true);
+    }
     
     JFrame frame=new JFrame();
     private JMenuBar menuBar;
     private JMenu file;
     private JMenu help;
-    private JMenuItem about;
-    private JMenuItem openSQL;
-    private JMenuItem saveTo;
+    private JMenuItem about,openSQL,saveTo,changeLog;
     private JButton btnAdd,btnClear,exportJson;    
     private JLabel lblId,lblTitle,lblFieldType;
     private JTextField txtId,txtFieldName,txtMinLength,txtMaxLength;
@@ -297,6 +344,7 @@ public class MainGUI {
     final String[] dataType={"String","LocalDate","Integer","BigDecimal","Double","byte[]"};
     private JFileChooser chooser;
     private File createFile;
+    private String changeLogId="20150807153017";
     
 
 }
