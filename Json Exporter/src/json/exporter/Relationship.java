@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,7 +21,7 @@ public class Relationship extends JFrame{
  private JTextField txtId,txtRelationshipName,txtOtherEntityName,txtOtherEntityField,txtOwnerSide;
  private JButton btnAdd,btnDone;
  private int relationalFieldId=1;
-  ArrayList relationList=new ArrayList();
+static  ArrayList relationList=new ArrayList();
  private ArrayList attributeList;
  
     public Relationship() {
@@ -116,11 +115,11 @@ public class Relationship extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             attributeList=new ArrayList();
-            attributeList.add("\"relationshipId\":"+txtId.getText()+",");
-            attributeList.add("\"relationshipName\":\""+txtRelationshipName.getText()+"\",");
-            attributeList.add("\"otherEntityName\":\""+txtOtherEntityName.getText()+"\",");
-            attributeList.add("\"relationshipType\":\""+relations.getSelectedItem()+"\",");
-            attributeList.add("\"otherEntityField\":\""+txtOtherEntityField.getText()+"\"");
+            attributeList.add("\"relationshipId\":"+txtId.getText()+",\n");
+            attributeList.add("\"relationshipName\":\""+txtRelationshipName.getText()+"\",\n");
+            attributeList.add("\"otherEntityName\":\""+txtOtherEntityName.getText()+"\",\n");
+            attributeList.add("\"relationshipType\":\""+relations.getSelectedItem()+"\",\n");
+            attributeList.add("\"otherEntityField\":\""+txtOtherEntityField.getText()+"\"\n");
             if(!(txtOwnerSide.getText().equals("") || (txtOwnerSide.getText().equals(null)))){
                 attributeList.add(",\n\"ownerSide\":\""+txtOwnerSide.getText()+"\"");
                 
@@ -146,7 +145,7 @@ public class Relationship extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             btnDone.setEnabled(false); 
-            System.exit(1);                    
+             
 
         }
         

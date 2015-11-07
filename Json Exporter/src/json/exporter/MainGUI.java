@@ -192,7 +192,6 @@ public class MainGUI {
         frame.setTitle("JSON Exporter");
     }
     class AddAction implements ActionListener{
-
         @Override
         public void actionPerformed(ActionEvent e) {                                   
            
@@ -250,39 +249,66 @@ public class MainGUI {
     class ActionExporter implements ActionListener{           
         @Override
         public void actionPerformed(ActionEvent e) {
-            chooser=new JFileChooser();
-            chooser.setDialogTitle("Save Json File");
-    
-            int choose=chooser.showSaveDialog(null);
-            if(choose==JFileChooser.APPROVE_OPTION){
-                
-                String filename=chooser.getSelectedFile().getName();
-                String directory=chooser.getCurrentDirectory().toString();
-                createFile=new File(directory+"/"+filename+".json");
-                FileOutputStream fos;
-                try {
-                    fos = new FileOutputStream(createFile);
-                     byte[] jsonBytes=(" {\n" +
-"\"relationships\": [],\n" +
-"\"fields\": ["+
-                             jsonEditor.getText()
-                             +"\n],\n" +
-"    \"changelogDate\":\""+changeLogId+"\",\n" +
-"    \"dto\": \"no\",\n" +
-"    \"pagination\":\"pagination\"\n" +
-"}"
-                             ).getBytes();
-                        fos.write(jsonBytes);
-                        fos.flush();
-                    jsonEditor.setText("");
-                    txtId.setText("1");
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }                   
-                              
-            }
+            exportJson.setEnabled(false);
+            String relationField="";
+            relations=Relationship.relationList;
+            System.out.println(relations.size());
+            ArrayList<String> list = null;
+             for (int i = 0; i < relations.size(); i++) {
+               list= new ArrayList();
+                list.add(relations.get(i));
+                relationField+="{";
+                 for (int j = 0; j < list.size(); j++) {
+                     String field=list.get(j);
+                     int l=field.length();
+                   //  relationField+=field
+                     System.out.println(field.substring(0, l-1));
+                 }
+                 relationField+="\n}";
+                             // System.out.println(relationField);
+                              relationField="";
+           // relationField+="}";
+             }
+//            
+//            
+//            chooser=new JFileChooser();
+//            chooser.setDialogTitle("Save Json File");
+//    
+//            int choose=chooser.showSaveDialog(null);
+//            if(choose==JFileChooser.APPROVE_OPTION){
+//                
+//                String filename=chooser.getSelectedFile().getName();
+//                String directory=chooser.getCurrentDirectory().toString();
+//                createFile=new File(directory+"/"+filename+".json");
+//                FileOutputStream fos;
+//                try {
+//                    fos = new FileOutputStream(createFile);
+//                     byte[] jsonBytes=(" {\n" +
+//"\"relationships\": ["+
+//                             
+//                             relationField
+//                             
+//                             +"],\n" +
+//"\"fields\": ["+
+//                             jsonEditor.getText()
+//                             +"\n],\n" +
+//"    \"changelogDate\":\""+changeLogId+"\",\n" +
+//"    \"dto\": \"no\",\n" +
+//"    \"pagination\":\"pagination\"\n" +
+//"}"
+//                             ).getBytes();
+//                        fos.write(jsonBytes);
+//                        fos.flush();
+//                    jsonEditor.setText("");
+//                    txtId.setText("1");
+//                } catch (FileNotFoundException ex) {
+//                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }                   
+//                              
+//            }
+//             relationField="";
          }      
     }
     class ActionRelation implements ActionListener{
@@ -327,6 +353,7 @@ public class MainGUI {
     private JComboBox typeCombo;
     ArrayList<Object > field=new ArrayList<>();
     ArrayList fieldList=new ArrayList<>();
+    ArrayList<String> relations;
     int incrementField=1;
     int incrementRelationId=1;
     final String[] dataType={"String","LocalDate","Integer","BigDecimal","Double","byte[]"};
