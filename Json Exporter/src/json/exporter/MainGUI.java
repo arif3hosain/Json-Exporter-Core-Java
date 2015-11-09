@@ -31,6 +31,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import static json.exporter.Relationship.relationList;
 
     //class MainGUI
 public class MainGUI {
@@ -198,16 +199,17 @@ public class MainGUI {
           field.add(txtId.getText());
           field.add(txtFieldName.getText());
           field.add(typeCombo.getSelectedItem());       
-          String fieldData="{\n"+" \"fieldId\": "+txtId.getText()+",\n \"fieldName\": \""+field.get(1)+"\",\n \"fieldType\": \""+field.get(2)+"\"";
+          String fieldData="{"+"\n \"fieldId\": "+txtId.getText()+",\n \"fieldName\": \""+field.get(1)+"\",\n \"fieldType\": \""+field.get(2)+"\"";
        
           if(required.isSelected() || minLength.isSelected() || maxLength.isSelected()){
              fieldData=fieldData+",\n \"fieldValidateRules\": [ \n";
              if(required.isSelected()){
                  fieldData=fieldData+" \"required\"";
-             }
-              if(minLength.isSelected()){
-                 fieldData=fieldData+",\n \"minlength\"";
-             }
+             }if(minLength.isSelected() && !required.isSelected()){
+                 fieldData=fieldData+"\"minlength\"\n]";
+             }else if(minLength.isSelected() && required.isSelected()){
+                  fieldData=fieldData+",\n  \"minlength\"";
+             }             
                if(maxLength.isSelected()){
                  fieldData=fieldData+",\n \"maxlength\"\n]";
              }
@@ -215,14 +217,14 @@ public class MainGUI {
                   fieldData=fieldData+",\n\"fieldValidateRulesMinlength\":\""+txtMinLength.getText()+"\"";
              }
                if(maxLength.isSelected()){
-                 fieldData=fieldData+"\n\"fieldValidateRulesMaxlength\":\""+txtMaxLength.getText()+"\"";
+                 fieldData=fieldData+",\n\"fieldValidateRulesMaxlength\":\""+txtMaxLength.getText()+"\"";
              }             
              }
 
           fieldData=fieldData+"\n}";
           fieldList.add(fieldData);
           if(fieldList.size() >1)
-              fieldData=",\n"+fieldData;          
+              fieldData=","+fieldData;          
           jsonEditor.append(fieldData);          
           fieldData="";
           field.clear();
@@ -230,7 +232,8 @@ public class MainGUI {
            txtId.setText(Integer.toString(Integer.parseInt(txtId.getText())+1));
            txtFieldName.setText("");
            btnAdd.setEnabled(false);
-           txtFieldName.requestFocus(true);              
+           txtFieldName.requestFocus(true); 
+          exportJson.setEnabled(true);
       }
     }
     class ClearAction implements ActionListener{
@@ -252,63 +255,59 @@ public class MainGUI {
             exportJson.setEnabled(false);
             String relationField="";
             relations=Relationship.relationList;
-            System.out.println(relations.size());
-            ArrayList<String> list = null;
-             for (int i = 0; i < relations.size(); i++) {
-               list= new ArrayList();
-                list.add(relations.get(i));
-                relationField+="{";
-                 for (int j = 0; j < list.size(); j++) {
-                     String field=list.get(j);
-                     int l=field.length();
-                   //  relationField+=field
-                     System.out.println(field.substring(0, l-1));
-                 }
-                 relationField+="\n}";
-                             // System.out.println(relationField);
-                              relationField="";
-           // relationField+="}";
-             }
-//            
-//            
-//            chooser=new JFileChooser();
-//            chooser.setDialogTitle("Save Json File");
-//    
-//            int choose=chooser.showSaveDialog(null);
-//            if(choose==JFileChooser.APPROVE_OPTION){
-//                
-//                String filename=chooser.getSelectedFile().getName();
-//                String directory=chooser.getCurrentDirectory().toString();
-//                createFile=new File(directory+"/"+filename+".json");
-//                FileOutputStream fos;
-//                try {
-//                    fos = new FileOutputStream(createFile);
-//                     byte[] jsonBytes=(" {\n" +
-//"\"relationships\": ["+
-//                             
-//                             relationField
-//                             
-//                             +"],\n" +
-//"\"fields\": ["+
-//                             jsonEditor.getText()
-//                             +"\n],\n" +
-//"    \"changelogDate\":\""+changeLogId+"\",\n" +
-//"    \"dto\": \"no\",\n" +
-//"    \"pagination\":\"pagination\"\n" +
-//"}"
-//                             ).getBytes();
-//                        fos.write(jsonBytes);
-//                        fos.flush();
-//                    jsonEditor.setText("");
-//                    txtId.setText("1");
-//                } catch (FileNotFoundException ex) {
-//                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-//                }                   
-//                              
-//            }
-//             relationField="";
+            for (int i = 0; i < relationList.size(); i++) {
+             ArrayList  list= new ArrayList();
+                list.add(relationList.get(i));
+                  for (int j = 0; j < list.size(); j++) {
+                     Object data=list.get(j).toString();
+                       relationField+=data.toString();            
+                  }
+                  if(relationList.size()>1){
+                      if((i+1)==relationList.size()){
+                       relationField="{\n"+relationField.substring(1, relationField.length()-1)+"\n}\n"; 
+                      }else
+                        relationField="{\n"+relationField.substring(1, relationField.length()-1)+"\n},\n"; 
+                  }else{
+                        relationField="{\n"+relationField.substring(1, relationField.length()-1)+"\n}\n"; 
+                  }
+                  fullRelationship+=relationField;
+                  relationField="";
+              }
+            
+            
+            chooser=new JFileChooser();
+            chooser.setDialogTitle("Save Json File");
+    
+            int choose=chooser.showSaveDialog(null);
+            if(choose==JFileChooser.APPROVE_OPTION){
+                
+                String filename=chooser.getSelectedFile().getName();
+                String directory=chooser.getCurrentDirectory().toString();
+                createFile=new File(directory+"/"+filename+".json");
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(createFile);
+                     byte[] jsonBytes=(" {\n" +
+"\"relationships\": [\n"+fullRelationship+"],\n" +"\"fields\": ["+
+                             jsonEditor.getText()
+                             +"\n],\n" +
+"    \"changelogDate\":\""+changeLogId+"\",\n" +
+"    \"dto\": \"no\",\n" +
+"    \"pagination\":\"pagination\"\n" +
+"}"
+                             ).getBytes();
+                        fos.write(jsonBytes);
+                        fos.flush();
+                    jsonEditor.setText("");
+                    txtId.setText("1");
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }                   
+                              
+            }
+             fullRelationship="";
          }      
     }
     class ActionRelation implements ActionListener{
@@ -360,6 +359,6 @@ public class MainGUI {
     private JFileChooser chooser;
     private File createFile;
     private String changeLogId="20150807153017";
-    
+    private String fullRelationship="";
 
 }

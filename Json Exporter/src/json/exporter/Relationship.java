@@ -21,7 +21,7 @@ public class Relationship extends JFrame{
  private JTextField txtId,txtRelationshipName,txtOtherEntityName,txtOtherEntityField,txtOwnerSide;
  private JButton btnAdd,btnDone;
  private int relationalFieldId=1;
-static  ArrayList relationList=new ArrayList();
+ static  ArrayList relationList=new ArrayList();
  private ArrayList attributeList;
  
     public Relationship() {
@@ -91,6 +91,8 @@ static  ArrayList relationList=new ArrayList();
                 }               
              }
         });
+         
+         
         txtRelationshipName.setFocusable(true);
         setContentPane(panel);
         btnDone.setEnabled(false);
@@ -115,11 +117,12 @@ static  ArrayList relationList=new ArrayList();
         @Override
         public void actionPerformed(ActionEvent e) {
             attributeList=new ArrayList();
-            attributeList.add("\"relationshipId\":"+txtId.getText()+",\n");
-            attributeList.add("\"relationshipName\":\""+txtRelationshipName.getText()+"\",\n");
-            attributeList.add("\"otherEntityName\":\""+txtOtherEntityName.getText()+"\",\n");
-            attributeList.add("\"relationshipType\":\""+relations.getSelectedItem()+"\",\n");
-            attributeList.add("\"otherEntityField\":\""+txtOtherEntityField.getText()+"\"\n");
+            attributeList.add("\"relationshipId\":"+txtId.getText()+"");
+            attributeList.add("\n\"relationshipName\":\""+txtRelationshipName.getText()+"\"");
+            attributeList.add("\n\"otherEntityName\":\""+txtOtherEntityName.getText()+"\"");
+            attributeList.add("\n\"relationshipType\":\""+relations.getSelectedItem()+"\"");
+            attributeList.add("\n\"otherEntityField\":\""+txtOtherEntityField.getText()+"\"");
+                        
             if(!(txtOwnerSide.getText().equals("") || (txtOwnerSide.getText().equals(null)))){
                 attributeList.add(",\n\"ownerSide\":\""+txtOwnerSide.getText()+"\"");
                 
@@ -145,10 +148,10 @@ static  ArrayList relationList=new ArrayList();
         @Override
         public void actionPerformed(ActionEvent e) {
             btnDone.setEnabled(false); 
-             
-
+              
+           
         }
         
     }
-    
+    String relationField="";
 }
