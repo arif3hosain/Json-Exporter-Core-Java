@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -92,7 +94,16 @@ public class Relationship extends JFrame{
              }
         });
          
-         
+       Action action=new AbstractAction() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               add();
+           }
+       };
+      txtOtherEntityField.addActionListener(action);
+       
+            
+        
         txtRelationshipName.setFocusable(true);
         setContentPane(panel);
         btnDone.setEnabled(false);
@@ -116,7 +127,21 @@ public class Relationship extends JFrame{
     class ActionAdd implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            attributeList=new ArrayList();
+          add();
+        }
+        
+    }
+    class ActionDone implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            btnDone.setEnabled(false); 
+            
+        }
+        
+    }
+    String relationField="";
+    public  void add(){
+          attributeList=new ArrayList();
             attributeList.add("\"relationshipId\":"+txtId.getText()+"");
             attributeList.add("\n\"relationshipName\":\""+txtRelationshipName.getText()+"\"");
             attributeList.add("\n\"otherEntityName\":\""+txtOtherEntityName.getText()+"\"");
@@ -141,17 +166,5 @@ public class Relationship extends JFrame{
              if(relationList.size() >0){
                 btnDone.setEnabled(true);
             }
-        }
-        
     }
-    class ActionDone implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            btnDone.setEnabled(false); 
-              
-           
-        }
-        
-    }
-    String relationField="";
 }

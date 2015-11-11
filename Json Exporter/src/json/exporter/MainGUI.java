@@ -8,7 +8,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -187,12 +188,19 @@ public class MainGUI {
       
         btnAdd.addActionListener(new AddAction());
         btnClear.addActionListener(new ClearAction());
-       
+        Action action=new AbstractAction() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            add();
+        }
+    };
+       txtFieldName.addActionListener(action);
         changeLog.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    changeLogId=JOptionPane.showInputDialog("Changelog ID", "");
-             }
+                    changeLogId=JOptionPane.showInputDialog("Changelog ID", changeLogId);
+              }
         });
         
          txtMinLength.addKeyListener(new KeyAdapter() {
@@ -234,51 +242,11 @@ public class MainGUI {
         frame.setResizable(false);
         frame.setTitle("JSON Exporter");
     }
+    
     class AddAction implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {                                   
-           
-          field.add(txtId.getText());
-          field.add(txtFieldName.getText());
-          field.add(typeCombo.getSelectedItem());       
-          String fieldData="{"+"\n \"fieldId\": "+txtId.getText()+",\n \"fieldName\": \""+field.get(1)+"\",\n \"fieldType\": \""+field.get(2)+"\"";
-       
-          if(required.isSelected() || minLength.isSelected() || maxLength.isSelected()){
-             fieldData=fieldData+",\n \"fieldValidateRules\": [ \n";
-             if(required.isSelected()){
-                 fieldData=fieldData+" \"required\"";
-             }if(minLength.isSelected() && !required.isSelected()){
-                 fieldData=fieldData+"\"minlength\"\n]";
-             }else if(minLength.isSelected() && required.isSelected()){
-                  fieldData=fieldData+",\n  \"minlength\"";
-             }             
-               if(maxLength.isSelected()){
-                   if(!required.isSelected() && !minLength.isSelected()){
-                       fieldData=fieldData+"\"maxlength\"\n]";
-                   }else
-                 fieldData=fieldData+",\n \"maxlength\"\n]";
-             }
-                if(minLength.isSelected()){
-                  fieldData=fieldData+",\n\"fieldValidateRulesMinlength\":\""+txtMinLength.getText()+"\"";
-             }
-               if(maxLength.isSelected()){
-                 fieldData=fieldData+",\n\"fieldValidateRulesMaxlength\":\""+txtMaxLength.getText()+"\"";
-             }             
-             }
-
-          fieldData=fieldData+"\n}";
-          fieldList.add(fieldData);
-          if(fieldList.size() >1)
-              fieldData=","+fieldData;          
-          jsonEditor.append(fieldData);          
-          fieldData="";
-          field.clear();
-          String jsonData=jsonEditor.getText();
-           txtId.setText(Integer.toString(Integer.parseInt(txtId.getText())+1));
-           txtFieldName.setText("");
-           btnAdd.setEnabled(false);
-           txtFieldName.requestFocus(true); 
-          exportJson.setEnabled(true);
+           add();
       }
        
     }
@@ -314,7 +282,7 @@ public class MainGUI {
                       }else
                         relationField="{\n"+relationField.substring(1, relationField.length()-1)+"\n},\n"; 
                   }else{
-                        relationField="{\n"+relationField.substring(1, relationField.length()-1)+"\n}\n"; 
+                        relationField="\n{\n"+relationField.substring(1, relationField.length()-1)+"\n}\n"; 
                   }
                   fullRelationship+=relationField;
                   relationField="";
@@ -354,6 +322,8 @@ public class MainGUI {
                               
             }
              fullRelationship="";
+             fieldList.clear();
+             Relationship.relationList.clear();
          }      
     }
     class ActionRelation implements ActionListener{
@@ -381,6 +351,52 @@ public class MainGUI {
         maxLength.setEnabled(true);
         txtMinLength.setEnabled(true);
         txtMaxLength.setEnabled(true);
+    }
+    public void add(){
+        
+          field.add(txtId.getText());
+          field.add(txtFieldName.getText());
+          field.add(typeCombo.getSelectedItem());       
+          String fieldData="{"+"\n \"fieldId\": "+txtId.getText()+",\n \"fieldName\": \""+field.get(1)+"\",\n \"fieldType\": \""+field.get(2)+"\"";
+       
+          if(required.isSelected() || minLength.isSelected() || maxLength.isSelected()){
+             fieldData=fieldData+",\n \"fieldValidateRules\": [ \n";
+             if(required.isSelected()){
+                 fieldData=fieldData+" \"required\"";
+             }if(minLength.isSelected() ){
+                  if(!maxLength.isSelected()){
+                       fieldData=fieldData+",\n\"minlength\"\n]";
+                   }else
+                 fieldData=fieldData+",\n\"minlength\"";
+             }
+             
+               if(maxLength.isSelected()){
+                   if(!required.isSelected() && !minLength.isSelected()){
+                       fieldData=fieldData+"\"maxlength\"\n]";
+                   }else
+                 fieldData=fieldData+",\n \"maxlength\"\n]";
+             }
+                if(minLength.isSelected()){
+                  fieldData=fieldData+",\n\"fieldValidateRulesMinlength\":\""+txtMinLength.getText()+"\"";
+             }
+               if(maxLength.isSelected()){
+                 fieldData=fieldData+",\n\"fieldValidateRulesMaxlength\":\""+txtMaxLength.getText()+"\"";
+             }             
+             }
+
+          fieldData=fieldData+"\n}";
+          fieldList.add(fieldData);
+          if(fieldList.size() >1)
+              fieldData=","+fieldData;          
+          jsonEditor.append(fieldData);          
+          fieldData="";
+          field.clear();
+          String jsonData=jsonEditor.getText();
+           txtId.setText(Integer.toString(Integer.parseInt(txtId.getText())+1));
+           txtFieldName.setText("");
+           btnAdd.setEnabled(false);
+           txtFieldName.requestFocus(true); 
+          exportJson.setEnabled(true);
     }
     
     JFrame frame=new JFrame();
