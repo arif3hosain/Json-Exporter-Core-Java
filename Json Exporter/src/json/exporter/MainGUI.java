@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -76,17 +77,24 @@ public class MainGUI {
         txtId.setText(Integer.toString(incrementField));
         txtFieldName=new JTextField(10);
         txtFieldName.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                 btnAdd.setEnabled(true);
-            }
             @Override
             public void keyReleased(KeyEvent e) {
-                if(!(txtFieldName.getText().length() >0)){
+                if((txtFieldName.getText().length() >0)){
+                    btnAdd.setEnabled(true);
+                     if(minLength.isSelected()){
+                      if(txtMaxLength.getText() ==null){
+                        btnAdd.setEnabled(false);
+                     }
+                   }if(maxLength.isSelected()){
+                    if(txtMaxLength.getText() ==null){
+                        btnAdd.setEnabled(false);
+                    }
+            }
+                }else{
                     btnAdd.setEnabled(false);
-                }               
-             }
+                }      
+                
+             }//end method
         });
         typeCombo=new JComboBox(dataType);
                                         //item listener will work when user change selection of item.
@@ -110,6 +118,27 @@ public class MainGUI {
                 }
               }
         });
+        minLength.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(minLength.isSelected()){
+                    txtMinLength.setEnabled(true);
+                    required.setSelected(true);
+                    if(txtMinLength.getText().equals("") || txtMinLength.getText()==null || txtFieldName.getText()==null)
+                  btnAdd.setEnabled(false);
+                    else
+                        btnAdd.setEnabled(true);
+                }
+                if(!minLength.isSelected()){
+                    if(txtFieldName.getText() !=null){
+                        btnAdd.setEnabled(true);
+                        txtMinLength.setEnabled(false);
+                    }
+                } 
+            }
+        });
+       
         txtMinLength=new JTextField(10);
         txtMaxLength=new JTextField(5);
         
@@ -165,9 +194,22 @@ public class MainGUI {
                     changeLogId=JOptionPane.showInputDialog("Changelog ID", "");
              }
         });
-    }
+        
+         txtMinLength.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(required.isSelected()){
+                     if(txtMinLength.getText().length()>0){
+                      btnAdd.setEnabled(true);
+                  }
+                  else
+                      btnAdd.setEnabled(false);
+                } 
+                
+             }
+        });       
   
-    
+    }             
     public static void main(String[] args) {
                     try {
                 for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -185,7 +227,7 @@ public class MainGUI {
     public void displayGUI(){
         
         frame.setLayout(null);
-        frame.setSize(450, 650);
+        frame.setSize(450, 680);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -211,6 +253,9 @@ public class MainGUI {
                   fieldData=fieldData+",\n  \"minlength\"";
              }             
                if(maxLength.isSelected()){
+                   if(!required.isSelected() && !minLength.isSelected()){
+                       fieldData=fieldData+"\"maxlength\"\n]";
+                   }else
                  fieldData=fieldData+",\n \"maxlength\"\n]";
              }
                 if(minLength.isSelected()){
@@ -235,6 +280,7 @@ public class MainGUI {
            txtFieldName.requestFocus(true); 
           exportJson.setEnabled(true);
       }
+       
     }
     class ClearAction implements ActionListener{
 
